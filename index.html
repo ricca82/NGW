@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+</head>
+
+<body style="margin-left: 5rem;">
+
+    <div>
+        <h1>registrazione</h1>
+        <h1>username</h1>
+        <input type="text" id="username">
+        <br>
+        <h1>nome</h1>
+        <input type="text" id="nome">
+        <br>
+        <h1>cognome</h1>
+        <input type="text" id="cognome">
+        <br>
+        <h1>password</h1>
+        <input type="password" id="password">
+        <br>
+        <button onclick="registrazione()">Registrati</button>
+    </div>
+    <hr>
+    <div>
+        <h1>Login</h1>
+        <h1>username</h1>
+        <input type="text" id="username_login">
+        <br>
+        <button onclick="login()">Accedi</button>
+
+    </div>
+    <div id="risposta"></div>
+    <script>
+        async function registrazione() {
+            const username = document.getElementById("username").value
+            const nome = document.getElementById("nome").value
+            const cognome = document.getElementById("cognome").value
+            const password = document.getElementById("password").value
+            /* qua faccio la richiesta*/
+            const request = await fetch("http://127.0.0.1:8000/api/register", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    nome: nome,
+                    cognome: cognome,
+                    password: password
+                })
+            })
+            /* qua la richiesta fatta la trasformo in json visualizzabile*/
+            const risposta = await request.json()
+            document.getElementById("risposta").innerHTML = risposta.msg
+        }
+
+
+
+        async function login(){
+            const username_login = document.getElementById("username_login").value
+
+            const request  = await fetch(`http://localhost:8000/api/user/${username_login}`)
+            const risposta= await request.json()
+
+            console.log(risposta)
+
+            if (risposta.username == username_login){
+                localStorage.setItem('username', username_login)
+                //spostami sulla pagina X
+                window.location.href = 'post.html'
+            }
+        }
+    </script>
+</body>
+
+</html>
